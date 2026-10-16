@@ -2,8 +2,7 @@
 
 A list of published Trials Frontier ghost bundles: other riders' best times and ghost replays, made and published
 with [trials-frontier-patch](https://github.com/gtjeffw/trials-frontier-patch) (`scripts/ghost_bundle.py`). Its
-`scripts/community.py` reads
-[`registry.json`](registry.json) to bring every listed rider into your game.
+`scripts/community.py` reads [`registry.json`](registry.json) to bring every listed rider into your game.
 
 **Getting listed.** `ghost_bundle.py publish` (and `update`) offers to open an issue here, titled
 `bundle: <owner>/<repo>`; you can also open one yourself ("Add a ghost bundle"). A GitHub Action
