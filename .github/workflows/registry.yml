@@ -1,0 +1,75 @@
+# Keeps registry.json up to date: a bundle request (an issue titled "bundle: <owner/repo>") is checked at once, and
+# every night all bundles with the GitHub topic trials-frontier-bundle are found and re-checked. The checking is
+# scripts/registry.py of trials-frontier-patch, pinned to PATCH_REF. Issue text is never put into a shell command:
+# the script reads the event file itself.
+name: registry
+
+on:
+  issues:
+    types: [opened]
+  schedule:
+    - cron: "23 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: registry
+  cancel-in-progress: false
+
+env:
+  PATCH_REPO: gtjeffw/trials-frontier-patch
+  PATCH_REF: PIN-AT-LAUNCH
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ env.PATCH_REPO }}
+          ref: ${{ env.PATCH_REF }}
+          path: patch
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bundle request
+        id: issue
+        if: github.event_name == 'issues'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          python3 -I patch/scripts/registry.py issue registry.json "$GITHUB_EVENT_PATH" > reply.md
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+
+      - name: Nightly crawl
+        if: github.event_name != 'issues'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -I patch/scripts/registry.py crawl registry.json
+
+      - name: Commit
+        run: |
+          python3 -I patch/scripts/registry.py check registry.json
+          if ! git diff --quiet -- registry.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add registry.json
+            git commit -m "registry: ${{ github.event_name }} run ${{ github.run_number }}"
+            git push
+          fi
+
+      - name: Reply
+        if: github.event_name == 'issues' && steps.issue.outputs.code != '2'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment "$NUMBER" --repo "$GITHUB_REPOSITORY" --body-file reply.md
+          gh issue close "$NUMBER" --repo "$GITHUB_REPOSITORY"
