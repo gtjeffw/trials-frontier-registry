@@ -1,3 +1,6 @@
+# NOT ACTIVE: to switch it on, move this file to .github/workflows/ once gtjeffw/trials-frontier-patch is public,
+# and set PATCH_REF below to a published commit of it.
+#
 # Keeps registry.json up to date: a bundle request (an issue titled "bundle: <owner/repo>") is checked at once, and
 # every night all bundles with the GitHub topic trials-frontier-bundle are found and re-checked. The checking is
 # scripts/registry.py of trials-frontier-patch, pinned to PATCH_REF. Issue text is never put into a shell command:

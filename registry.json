@@ -1,7 +1,23 @@
 {
  "format": "trials-frontier-registry",
  "format_version": 1,
- "updated": null,
- "bundles": [],
+ "updated": "2026-10-16T18:56:07Z",
+ "bundles": [
+  {
+   "repo": "gtjeffw/trials-frontier-ghosts-jayuph",
+   "publisher": "gtjeffw",
+   "rider": "jayuph",
+   "game_hash": "17FE8523",
+   "profile_sha256": "41cf72a5d20417b3e5dd1c84e6802a359bdafdba40cc233d38a19504416cfe7e",
+   "license": "CC0-1.0",
+   "commit": "2c28b071d1a309757afc91664c35605ac13438d8",
+   "manifest_sha256": "7b597493415b11086a2571123622fc7f0dac49eba8fbf263676f4a8c66e5691d",
+   "verified": "2026-10-16T18:56:07Z",
+   "status": "ok",
+   "via": "crawl",
+   "added": "2026-10-16T18:56:07Z",
+   "pushed_at": "2026-10-10T15:58:17Z"
+  }
+ ],
  "blocked": []
 }
